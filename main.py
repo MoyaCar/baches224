@@ -3,11 +3,28 @@ import cv2 as cv
 import time
 import threading
 
+#Comentar o descomentar opción según especificaciones del modelo, sólo puede haber una activa.
+
+#Opcion 1, Imagenes en 224 * 224, ResNet34
+#img_size = 224
+#model = models.resnet34
+#trained_ia = 'baches224_rn34'
+
+#Opcion 2, Imagenes en 448 * 448, ResNet34
+#img_size = 448
+#model = models.resnet34
+#trained_ia = 'baches_rn34_448'
+
+#Opcion 3, Imagenes en 720 * 720 , ResNet34
+img_size = 720
+model = models.resnet34
+trained_ia = 'baches_HD_rs34_2'
+
 #variables para modelo
 root = '.'
 path = Path(root)
 classes = ['Negative data', 'Positive data']
-data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_transforms(do_flip=False),size=224).normalize(imagenet_stats)
+data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_transforms(do_flip=False),size=img_size).normalize(imagenet_stats)
 learn = cnn_learner(data, models.resnet34)
 
 #carga del modelo
@@ -37,7 +54,7 @@ def reproducir_video():
         ret, frame = cap.read()
 
         frame = cv.putText(frame, prediccion, org, font,fontScale, color, thickness, cv.LINE_AA)
-        cv.imshow('video', frame)
+        #cv.imshow('video', frame)
 
         if (fp % 90 == 0):
             cv.imwrite('frame.jpg',frame)
